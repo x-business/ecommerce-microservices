@@ -1,0 +1,159 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 'E-Commerce Store Serverless API'
+
+Globals:
+  Function:
+    Timeout: 30
+    Runtime: php8.1
+    Environment:
+      Variables:
+        DB_HOST: !Ref DatabaseEndpoint
+        DB_DATABASE: ecommerce
+        DB_USERNAME: admin
+        DB_PASSWORD: !Ref DatabasePassword
+        APP_ENV: production
+        APP_KEY: !Ref AppKey
+
+Parameters:
+  DatabaseEndpoint:
+    Type: String
+    Description: RDS Database Endpoint
+  
+  DatabasePassword:
+    Type: String
+    NoEcho: true
+    Description: Database Password
+  
+  AppKey:
+    Type: String
+    NoEcho: true
+    Description: Laravel Application Key
+
+Resources:
+  # API Gateway
+  ECommerceApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prod
+      Cors:
+        AllowMethods: "'GET,POST,PUT,DELETE,OPTIONS'"
+        AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+        AllowOrigin: "'*'"
+
+  # Catalog Service Functions
+  GetProductsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: microservices/catalog/
+      Handler: public/index.php
+      Events:
+        GetProducts:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ECommerceApi
+            Path: /catalog/products
+            Method: get
+        GetProduct:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ECommerceApi
+            Path: /catalog/products/{id}
+            Method: get
+        GetCategories:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ECommerceApi
+            Path: /catalog/categories
+            Method: get
+
+  # Checkout Service Functions
+  CheckoutFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: microservices/checkout/
+      Handler: public/index.php
+      Events:
+        CreateOrder:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ECommerceApi
+            Path: /checkout/orders
+            Method: post
+        GetOrder:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ECommerceApi
+            Path: /checkout/orders/{orderNumber}
+            Method: get
+        UpdateOrderStatus:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ECommerceApi
+            Path: /checkout/orders/{orderNumber}/status
+            Method: patch
+
+  # Email Service Functions
+  EmailFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: microservices/email/
+      Handler: public/index.php
+      Environment:
+        Variables:
+          MAIL_MAILER: ses
+          MAIL_FROM_ADDRESS: noreply@ecommerce.com
+      Events:
+        SendOrderConfirmation:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ECommerceApi
+            Path: /email/order-confirmation
+            Method: post
+        SendOrderConfirmationByNumber:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ECommerceApi
+            Path: /email/order-confirmation-by-number
+            Method: post
+        SendCustomNotification:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ECommerceApi
+            Path: /email/custom-notification
+            Method: post
+
+  # Lambda Layer for PHP dependencies
+  PHPLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: php-dependencies
+      Description: PHP dependencies for Laravel
+      ContentUri: layers/php/
+      CompatibleRuntimes:
+        - php8.1
+
+Outputs:
+  ApiUrl:
+    Description: API Gateway endpoint URL
+    Value: !Sub 'https://${ECommerceApi}.execute-api.${AWS::Region}.amazonaws.com/prod/'
+    Export:
+      Name: ECommerceApiUrl
+
+  GetProductsFunctionArn:
+    Description: Get Products Function ARN
+    Value: !GetAtt GetProductsFunction.Arn
+    Export:
+      Name: GetProductsFunctionArn
+
+  CheckoutFunctionArn:
+    Description: Checkout Function ARN
+    Value: !GetAtt CheckoutFunction.Arn
+    Export:
+      Name: CheckoutFunctionArn
+
+  EmailFunctionArn:
+    Description: Email Function ARN
+    Value: !GetAtt EmailFunction.Arn
+    Export:
+      Name: EmailFunctionArn
