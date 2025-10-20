@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CatalogController;
+use App\Http\Controllers\CheckoutController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,4 +25,11 @@ Route::prefix('catalog')->group(function () {
     Route::get('/products', [CatalogController::class, 'index']);
     Route::get('/products/{id}', [CatalogController::class, 'show']);
     Route::get('/categories', [CatalogController::class, 'categories']);
+});
+
+// Checkout Service Routes
+Route::prefix('checkout')->group(function () {
+    Route::post('/orders', [CheckoutController::class, 'createOrder']);
+    Route::get('/orders/{orderNumber}', [CheckoutController::class, 'getOrder']);
+    Route::patch('/orders/{orderNumber}/status', [CheckoutController::class, 'updateOrderStatus']);
 });
