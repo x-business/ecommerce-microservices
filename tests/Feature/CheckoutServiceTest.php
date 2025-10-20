@@ -22,6 +22,96 @@ class CheckoutServiceTest extends TestCase
     }
 
     /**
+     * Test getting all orders
+     */
+    public function test_can_get_all_orders(): void
+    {
+        Order::factory()->count(3)->create();
+
+        $response = $this->getJson('/api/checkout/orders');
+
+        $response->assertStatus(200)
+                ->assertJsonStructure([
+                    'success',
+                    'data' => [
+                        'data' => [
+                            '*' => [
+                                'id',
+                                'order_number',
+                                'customer_email',
+                                'customer_name',
+                                'total_amount',
+                                'status',
+                                'created_at',
+                                'updated_at',
+                                'order_items'
+                            ]
+                        ],
+                        'current_page',
+                        'last_page',
+                        'per_page',
+                        'total'
+                    ],
+                    'message'
+                ])
+                ->assertJson(['success' => true]);
+
+        $data = $response->json('data');
+        $this->assertCount(3, $data['data']);
+    }
+
+    /**
+     * Test filtering orders by status
+     */
+    public function test_can_filter_orders_by_status(): void
+    {
+        Order::factory()->create(['status' => 'pending']);
+        Order::factory()->create(['status' => 'processing']);
+        Order::factory()->create(['status' => 'delivered']);
+
+        $response = $this->getJson('/api/checkout/orders?status=pending');
+
+        $response->assertStatus(200);
+        
+        $orders = $response->json('data.data');
+        $this->assertCount(1, $orders);
+        $this->assertEquals('pending', $orders[0]['status']);
+    }
+
+    /**
+     * Test filtering orders by customer email
+     */
+    public function test_can_filter_orders_by_customer_email(): void
+    {
+        Order::factory()->create(['customer_email' => 'john@example.com']);
+        Order::factory()->create(['customer_email' => 'jane@example.com']);
+
+        $response = $this->getJson('/api/checkout/orders?customer_email=john');
+
+        $response->assertStatus(200);
+        
+        $orders = $response->json('data.data');
+        $this->assertCount(1, $orders);
+        $this->assertEquals('john@example.com', $orders[0]['customer_email']);
+    }
+
+    /**
+     * Test getting orders with pagination
+     */
+    public function test_can_get_orders_with_pagination(): void
+    {
+        Order::factory()->count(5)->create();
+
+        $response = $this->getJson('/api/checkout/orders?per_page=2&page=1');
+
+        $response->assertStatus(200);
+        
+        $data = $response->json('data');
+        $this->assertCount(2, $data['data']);
+        $this->assertEquals(1, $data['current_page']);
+    }
+
+    /**
      * Test creating a new order
      */
     public function test_can_create_order(): void

@@ -15,6 +15,45 @@ use Illuminate\Support\Str;
 class CheckoutController extends Controller
 {
     /**
+     * Get all orders with optional filtering
+     */
+    public function index(Request $request): JsonResponse
+    {
+        $query = Order::with('orderItems.product');
+
+        // Filter by customer email if provided
+        if ($request->has('customer_email') && $request->customer_email) {
+            $query->where('customer_email', 'like', "%{$request->customer_email}%");
+        }
+
+        // Filter by status if provided
+        if ($request->has('status') && $request->status) {
+            $query->where('status', $request->status);
+        }
+
+        // Filter by date range if provided
+        if ($request->has('date_from') && $request->date_from) {
+            $query->whereDate('created_at', '>=', $request->date_from);
+        }
+        if ($request->has('date_to') && $request->date_to) {
+            $query->whereDate('created_at', '<=', $request->date_to);
+        }
+
+        // Order by creation date (newest first)
+        $query->orderBy('created_at', 'desc');
+
+        // Pagination
+        $perPage = $request->get('per_page', 10);
+        $orders = $query->paginate($perPage);
+
+        return response()->json([
+            'success' => true,
+            'data' => $orders,
+            'message' => 'Orders retrieved successfully'
+        ]);
+    }
+
+    /**
      * Create a new order
      */
     public function createOrder(Request $request): JsonResponse

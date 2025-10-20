@@ -30,6 +30,7 @@ Route::prefix('catalog')->group(function () {
 
 // Checkout Service Routes
 Route::prefix('checkout')->group(function () {
+    Route::get('/orders', [CheckoutController::class, 'index']);
     Route::post('/orders', [CheckoutController::class, 'createOrder']);
     Route::get('/orders/{orderNumber}', [CheckoutController::class, 'getOrder']);
     Route::patch('/orders/{orderNumber}/status', [CheckoutController::class, 'updateOrderStatus']);
