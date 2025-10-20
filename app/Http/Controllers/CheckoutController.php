@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
+use App\Mail\OrderConfirmationMail;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class CheckoutController extends Controller
@@ -97,8 +99,8 @@ class CheckoutController extends Controller
 
             DB::commit();
 
-            // Trigger email notification (this would be handled by the email service)
-            $this->triggerOrderEmail($order);
+            // Send order confirmation email
+            Mail::to($order->customer_email)->send(new OrderConfirmationMail($order));
 
             return response()->json([
                 'success' => true,

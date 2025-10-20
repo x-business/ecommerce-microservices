@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\EmailController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -32,4 +33,11 @@ Route::prefix('checkout')->group(function () {
     Route::post('/orders', [CheckoutController::class, 'createOrder']);
     Route::get('/orders/{orderNumber}', [CheckoutController::class, 'getOrder']);
     Route::patch('/orders/{orderNumber}/status', [CheckoutController::class, 'updateOrderStatus']);
+});
+
+// Email Service Routes
+Route::prefix('email')->group(function () {
+    Route::post('/order-confirmation', [EmailController::class, 'sendOrderConfirmation']);
+    Route::post('/order-confirmation-by-number', [EmailController::class, 'sendOrderConfirmationByNumber']);
+    Route::post('/custom-notification', [EmailController::class, 'sendCustomNotification']);
 });
