@@ -1,6 +1,6 @@
 # E-Commerce Microservices System
 
-A comprehensive e-commerce system built with Laravel and Vue.js, featuring three microservices: Catalog, Checkout, and Email services. The system includes Docker containerization, AWS infrastructure templates, and comprehensive testing.
+A comprehensive e-commerce system built with Laravel and Vue.js for Cinch's assessment, featuring three microservices: Catalog, Checkout, and Email services. The system includes Docker containerization, AWS infrastructure templates, and comprehensive testing.
 
 ## 🏗️ Architecture
 
@@ -431,73 +431,6 @@ MAIL_FROM_NAME="${APP_NAME}"
 - Input sanitization
 - Secure file uploads
 
-## 📊 Monitoring
-
-### Logging
-
-- Application logs in `storage/logs/`
-- Error tracking with Laravel Telescope
-- Performance monitoring
-- Database query logging
-
-### Health Checks
-
-- Database connectivity
-- Redis connectivity
-- Email service status
-- API endpoint health
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests
-5. Run the test suite
-6. Submit a pull request
-
-### Development Guidelines
-
-- Follow PSR-12 coding standards
-- Write comprehensive tests
-- Update documentation
-- Use meaningful commit messages
-- Follow semantic versioning
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🆘 Support
-
-For support and questions:
-
-- Create an issue on GitHub
-- Check the documentation
-- Review the test cases
-- Contact the development team
-
-## 🗺️ Roadmap
-
-### Planned Features
-
-- [ ] User authentication
-- [ ] Payment integration
-- [ ] Inventory management
-- [ ] Analytics dashboard
-- [ ] Mobile app
-- [ ] Multi-language support
-- [ ] Advanced search
-- [ ] Recommendation engine
-
-### Performance Improvements
-
-- [ ] Database optimization
-- [ ] Caching strategies
-- [ ] CDN integration
-- [ ] Load balancing
-- [ ] Auto-scaling
-
 ---
 
-**Built with ❤️ using Laravel and Vue.js**
+**Built with ❤️ using Laravel and Vue.js by Michael Mariano**
