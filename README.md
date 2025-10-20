@@ -46,7 +46,7 @@ A comprehensive e-commerce system built with Laravel and Vue.js, featuring three
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-username/ecommerce-microservices.git
+   git clone https://github.com/x-business/ecommerce-microservices.git
    cd ecommerce-microservices
    ```
 
