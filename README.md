@@ -1,66 +1,503 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# E-Commerce Microservices System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A comprehensive e-commerce system built with Laravel and Vue.js, featuring three microservices: Catalog, Checkout, and Email services. The system includes Docker containerization, AWS infrastructure templates, and comprehensive testing.
 
-## About Laravel
+## 🏗️ Architecture
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Microservices
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+1. **Catalog Service** - Product management and listing
+   - Product listing with filtering and pagination
+   - Product details and categories
+   - Search functionality
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+2. **Checkout Service** - Order processing
+   - Order creation and management
+   - Stock validation and updates
+   - Order status tracking
 
-## Learning Laravel
+3. **Email Service** - Notification system
+   - Order confirmation emails
+   - Custom email notifications
+   - Email templates
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Tech Stack
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- **Backend**: PHP 8.1, Laravel 10
+- **Frontend**: Vue.js 3, Bootstrap 5
+- **Database**: MySQL 8.0
+- **Cache**: Redis
+- **Containerization**: Docker & Docker Compose
+- **Cloud**: AWS (EC2, RDS, CloudFormation, SAM)
+- **Testing**: PHPUnit, Laravel Testing
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🚀 Quick Start
 
-## Laravel Sponsors
+### Prerequisites
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- PHP 8.1+
+- Composer
+- Node.js 14+
+- Docker & Docker Compose
+- MySQL 8.0+
+- Redis
 
-### Premium Partners
+### Local Development Setup
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/your-username/ecommerce-microservices.git
+   cd ecommerce-microservices
+   ```
 
-## Contributing
+2. **Install PHP dependencies**
+   ```bash
+   composer install
+   ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+3. **Install Node.js dependencies**
+   ```bash
+   npm install
+   ```
 
-## Code of Conduct
+4. **Environment setup**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+5. **Database setup**
+   ```bash
+   php artisan migrate
+   php artisan db:seed
+   ```
 
-## Security Vulnerabilities
+6. **Build frontend assets**
+   ```bash
+   npm run build
+   ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+7. **Start the development server**
+   ```bash
+   php artisan serve
+   ```
 
-## License
+The application will be available at `http://localhost:8000`
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 🐳 Docker Setup
+
+### Using Docker Compose
+
+1. **Run the Docker setup script**
+   ```bash
+   ./docker-setup.sh
+   ```
+
+   Or manually:
+
+2. **Start all services**
+   ```bash
+   docker-compose up -d
+   ```
+
+3. **Run migrations and seeders**
+   ```bash
+   docker-compose exec app php artisan migrate --force
+   docker-compose exec app php artisan db:seed --force
+   ```
+
+### Services
+
+- **Application**: `http://localhost:8080`
+- **MySQL**: `localhost:3306`
+- **Redis**: `localhost:6379`
+- **MailHog**: `http://localhost:8025`
+
+### Docker Commands
+
+```bash
+# View logs
+docker-compose logs -f
+
+# Stop services
+docker-compose down
+
+# Rebuild containers
+docker-compose up -d --build
+
+# Access application container
+docker-compose exec app bash
+```
+
+## ☁️ AWS Deployment
+
+### CloudFormation Deployment
+
+1. **Deploy database infrastructure**
+   ```bash
+   ./deploy-aws.sh dev us-east-1
+   ```
+
+2. **Update application configuration**
+   - Update `.env` with RDS endpoint
+   - Configure security groups
+
+3. **Deploy application stack**
+   ```bash
+   aws cloudformation deploy \
+     --template-file aws/cloudformation/application.yml \
+     --stack-name ecommerce-dev-application \
+     --parameter-overrides Environment=dev \
+     --capabilities CAPABILITY_IAM
+   ```
+
+### SAM Serverless Deployment
+
+1. **Deploy serverless API**
+   ```bash
+   ./deploy-sam.sh dev us-east-1
+   ```
+
+2. **Configure Lambda functions**
+   - Update environment variables
+   - Set up API Gateway
+
+## 🧪 Testing
+
+### Running Tests
+
+```bash
+# Run all tests
+php artisan test
+
+# Run specific test suite
+php artisan test --testsuite=Feature
+
+# Run with coverage
+php artisan test --coverage
+
+# Run specific test
+php artisan test tests/Feature/CatalogServiceTest.php
+```
+
+### Test Structure
+
+- **Feature Tests**: API endpoint testing
+- **Unit Tests**: Individual component testing
+- **Factory Tests**: Data generation testing
+
+### Test Coverage
+
+The test suite covers:
+- ✅ Catalog service endpoints
+- ✅ Checkout service functionality
+- ✅ Email service operations
+- ✅ Database operations
+- ✅ Validation rules
+- ✅ Error handling
+
+## 📚 API Documentation
+
+### Catalog Service
+
+#### Get Products
+```http
+GET /api/catalog/products
+```
+
+**Query Parameters:**
+- `page` - Page number (default: 1)
+- `per_page` - Items per page (default: 10)
+- `category` - Filter by category
+- `search` - Search term
+- `min_price` - Minimum price
+- `max_price` - Maximum price
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "data": [...],
+    "current_page": 1,
+    "last_page": 5,
+    "per_page": 10,
+    "total": 50
+  },
+  "message": "Products retrieved successfully"
+}
+```
+
+#### Get Product Details
+```http
+GET /api/catalog/products/{id}
+```
+
+#### Get Categories
+```http
+GET /api/catalog/categories
+```
+
+### Checkout Service
+
+#### Create Order
+```http
+POST /api/checkout/orders
+```
+
+**Request Body:**
+```json
+{
+  "customer_email": "customer@example.com",
+  "customer_name": "John Doe",
+  "shipping_address": "123 Main St, City, State",
+  "billing_address": "123 Main St, City, State",
+  "payment_method": "credit_card",
+  "notes": "Special instructions",
+  "items": [
+    {
+      "product_id": 1,
+      "quantity": 2
+    }
+  ]
+}
+```
+
+#### Get Order
+```http
+GET /api/checkout/orders/{orderNumber}
+```
+
+#### Update Order Status
+```http
+PATCH /api/checkout/orders/{orderNumber}/status
+```
+
+**Request Body:**
+```json
+{
+  "status": "processing"
+}
+```
+
+### Email Service
+
+#### Send Order Confirmation
+```http
+POST /api/email/order-confirmation
+```
+
+**Request Body:**
+```json
+{
+  "order_id": 1
+}
+```
+
+#### Send Custom Notification
+```http
+POST /api/email/custom-notification
+```
+
+**Request Body:**
+```json
+{
+  "to": "recipient@example.com",
+  "subject": "Subject",
+  "message": "Message content"
+}
+```
+
+## 🗄️ Database Schema
+
+### Products Table
+- `id` - Primary key
+- `name` - Product name
+- `description` - Product description
+- `price` - Product price
+- `sku` - Stock keeping unit
+- `stock_quantity` - Available quantity
+- `image_url` - Product image URL
+- `category` - Product category
+- `is_active` - Active status
+- `created_at` - Creation timestamp
+- `updated_at` - Update timestamp
+
+### Orders Table
+- `id` - Primary key
+- `order_number` - Unique order identifier
+- `customer_email` - Customer email
+- `customer_name` - Customer name
+- `total_amount` - Order total
+- `status` - Order status
+- `shipping_address` - Shipping address
+- `billing_address` - Billing address
+- `payment_method` - Payment method
+- `notes` - Order notes
+- `created_at` - Creation timestamp
+- `updated_at` - Update timestamp
+
+### Order Items Table
+- `id` - Primary key
+- `order_id` - Foreign key to orders
+- `product_id` - Foreign key to products
+- `quantity` - Item quantity
+- `unit_price` - Price per unit
+- `total_price` - Total price for item
+- `created_at` - Creation timestamp
+- `updated_at` - Update timestamp
+
+## 🔧 Configuration
+
+### Environment Variables
+
+```env
+# Application
+APP_NAME="E-Commerce Store"
+APP_ENV=local
+APP_KEY=base64:YourAppKeyHere
+APP_DEBUG=true
+APP_URL=http://localhost:8000
+
+# Database
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=ecommerce
+DB_USERNAME=root
+DB_PASSWORD=
+
+# Cache & Session
+CACHE_DRIVER=redis
+SESSION_DRIVER=redis
+QUEUE_CONNECTION=redis
+
+# Redis
+REDIS_HOST=127.0.0.1
+REDIS_PASSWORD=null
+REDIS_PORT=6379
+
+# Mail
+MAIL_MAILER=smtp
+MAIL_HOST=localhost
+MAIL_PORT=1025
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+MAIL_FROM_ADDRESS="noreply@ecommerce.com"
+MAIL_FROM_NAME="${APP_NAME}"
+```
+
+## 🚀 Deployment
+
+### Production Checklist
+
+- [ ] Update environment variables
+- [ ] Configure SSL certificates
+- [ ] Set up database backups
+- [ ] Configure monitoring
+- [ ] Set up log aggregation
+- [ ] Configure CDN
+- [ ] Set up error tracking
+- [ ] Configure security headers
+
+### Performance Optimization
+
+- Enable Redis caching
+- Configure database indexes
+- Optimize images
+- Enable compression
+- Use CDN for static assets
+- Implement database query optimization
+
+## 🔒 Security
+
+### Security Measures
+
+- CSRF protection enabled
+- SQL injection prevention
+- XSS protection
+- Input validation
+- Rate limiting
+- Secure headers
+- Environment variable protection
+
+### Security Best Practices
+
+- Use HTTPS in production
+- Regular security updates
+- Database access control
+- API rate limiting
+- Input sanitization
+- Secure file uploads
+
+## 📊 Monitoring
+
+### Logging
+
+- Application logs in `storage/logs/`
+- Error tracking with Laravel Telescope
+- Performance monitoring
+- Database query logging
+
+### Health Checks
+
+- Database connectivity
+- Redis connectivity
+- Email service status
+- API endpoint health
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests
+5. Run the test suite
+6. Submit a pull request
+
+### Development Guidelines
+
+- Follow PSR-12 coding standards
+- Write comprehensive tests
+- Update documentation
+- Use meaningful commit messages
+- Follow semantic versioning
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🆘 Support
+
+For support and questions:
+
+- Create an issue on GitHub
+- Check the documentation
+- Review the test cases
+- Contact the development team
+
+## 🗺️ Roadmap
+
+### Planned Features
+
+- [ ] User authentication
+- [ ] Payment integration
+- [ ] Inventory management
+- [ ] Analytics dashboard
+- [ ] Mobile app
+- [ ] Multi-language support
+- [ ] Advanced search
+- [ ] Recommendation engine
+
+### Performance Improvements
+
+- [ ] Database optimization
+- [ ] Caching strategies
+- [ ] CDN integration
+- [ ] Load balancing
+- [ ] Auto-scaling
+
+---
+
+**Built with ❤️ using Laravel and Vue.js**
